@@ -1,0 +1,37 @@
+<!--
+Document Title: Social Network All Posts Page Template
+Author: Moise Botsoe
+Date: 22.04.2024
+
+Description:
+This HTML template represents a page displaying all posts in a social network application. 
+It extends a layout template named "layout.html" and includes a loop to iterate over 
+each post in the provided context variable 'posts'. For each post, it displays the author's 
+username, content, timestamp, and a placeholder for the number of likes (which can be 
+implemented later). Each post is separated by a horizontal line.
+
+Dependencies:
+- 'layout.html' template (Ensure 'layout.html' is correctly defined and includes necessary CSS and JavaScript imports.)
+
+Usage:
+1. Ensure the 'layout.html' template is correctly defined and includes necessary CSS and JavaScript imports.
+2. Pass the 'posts' variable containing a list of post objects from the backend to this template when rendering the page.
+3. Customize the post display by modifying the HTML structure and CSS styles as needed.
+4. Implement functionality to retrieve and display the number of likes for each post. You can do this by updating the placeholder "Likes: 0" dynamically using JavaScript or by rendering the actual like count from the backend.
+
+-->
+
+<!-- network/templates/network/all_posts.html -->
+{% extends "network/layout.html" %}
+{% block body %}
+  <h2>All Posts</h2>
+  {% for post in posts %}
+    <div class="post">
+      <p><strong>{{ post.author.username }}</strong></p>
+      <p>{{ post.content }}</p>
+      <p>Posted on: {{ post.timestamp }}</p>
+      <p>Likes: 0</p> <!-- Implement this later -->
+    </div>
+    <hr>
+  {% endfor %}
+{% endblock %}

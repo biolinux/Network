@@ -1,0 +1,97 @@
+<!--
+Document Title: Social Network All Posts Page
+Author: Moise Botsoe
+Date: 22.04.2024
+
+Description:
+This HTML template represents a page displaying all posts in a social network application. 
+It extends a layout template named "layout.html" and includes functionality for posting, 
+editing, liking posts, and pagination. The page structure consists of a form for posting 
+new content, a list of existing posts with author information, content, like count, like 
+button, and edit options. Pagination links are included at the bottom for navigating 
+through multiple pages of posts.
+
+Dependencies:
+- jQuery library (included via CDN)
+- Custom JavaScript files: 'post.js', 'edit.js', and 'like.js' (included via {% static %} template tag)
+
+Usage:
+1. Ensure the "layout.html" template is correctly defined and includes necessary CSS and JavaScript imports.
+2. Include the {% csrf_token %} template tag within the form to handle Cross-Site Request Forgery protection.
+3. Update the URLs in the pagination links and like button data attributes according to your application's routing.
+4. Ensure the server-side code handles post submissions, edits, and likes as per the specified AJAX endpoints.
+
+-->
+
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+<div class="body">
+    <h2>All Posts</h2>
+    <div class="form-wrapper">
+        <div class="flex-container">
+            <form id="post-form" method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="content" class="form-label">New Post</label>
+                    <textarea name="content" class="form-control" id="content" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="form-wrapper form-wrapper-1">
+        {% for post in page_obj %}
+        <div class="post" id="post-{{ post.id }}">
+            <p><a class="nav-link" href="{% url 'profile' post.author.username %}"><strong>{{ post.author.username }}</strong></a></p>
+            
+            <div class="post-content">
+                <div class="view-mode">
+                    <p id="post-content-{{ post.id }}">{{ post.content }}</p>
+                </div>
+                <p>Posted on: {{ post.timestamp }}</p>
+                <p>Likes: <span id="like-count-{{ post.id }}">{{ post.likes.count }}</span></p> <!-- Display like count -->
+                <button class="like-btn" data-post-id="{{ post.id }}">Like</button> <!-- Like button -->
+
+                {% if post.author == user %}
+                <div class="edit-mode" style="display: none;">
+                    <textarea id="edit-content-{{ post.id }}" class="form-control">{{ post.content }}</textarea>
+                    <button class="save-btn" data-post-id="{{ post.id }}">Save</button>
+                </div>
+                <button class="edit-btn" data-post-id="{{ post.id }}">Edit</button>
+                {% endif %}
+            </div>
+        </div>
+        <hr>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination links -->
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'network/post.js' %}"></script>
+<script src="{% static 'network/edit.js' %}"></script>
+<script src="{% static 'network/like.js' %}"></script>
+
+{% endblock %}

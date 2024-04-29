@@ -1,0 +1,35 @@
+
+/* Set textarea width to 100% */
+.form-control {
+    width: 100%;
+
+        }
+
+.form-wrapper {
+    border: 0.1rem solid rgb(212, 203, 203);
+    padding: 1cm; /* Optional: Add padding inside the border */
+    width: 100%; /* Make the form take up the full width */
+    margin-bottom: 0.2rem; /* Add margin between the wrapper divs */
+}
+
+
+
+.form-wrapper form {
+    display: block;
+    margin: 0; /* Remove default margins */
+}
+
+/* Set textarea width to 100% */
+.form-control {
+    width: 100%;
+}
+
+/* CSS for showing the textarea */
+.show-textarea {
+    display: block;
+}
+
+/* CSS for hiding the textarea */
+.hide-textarea {
+    display: none;
+}

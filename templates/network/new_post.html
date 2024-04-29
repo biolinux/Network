@@ -1,0 +1,10 @@
+<!-- network/templates/network/new_post.html -->
+{% extends "network/layout.html" %}
+{% block body %}
+  <h2>New Post</h2>
+  <form method="post">
+    {% csrf_token %}
+    <textarea name="content" rows="4" cols="50"></textarea><br>
+    <input type="submit" value="Submit">
+  </form>
+{% endblock %}

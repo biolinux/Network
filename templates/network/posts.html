@@ -1,0 +1,78 @@
+
+<!--
+Document Title: Social Network All Posts Editing Page Template
+Author: 
+Date: 
+
+Description:
+This HTML template represents a page where users can view all posts and edit their own posts. It extends a layout template 
+named "layout.html" to maintain consistency in design and includes a container to display all posts retrieved from the backend. 
+For each post, it displays the post content and provides an "Edit" button for posts authored by the logged-in user. When the 
+user clicks the "Edit" button, the content of the post is replaced with a textarea allowing the user to edit the post. 
+After making changes, the user can click the "Save" button to submit the edited content to the server via a fetch request. 
+Upon successful submission, the post content is updated on the page.
+
+Dependencies:
+- 'layout.html' template (Ensure 'layout.html' is correctly defined and includes necessary CSS and JavaScript imports.)
+- Django CSRF token (Ensure the CSRF token is correctly included in the JavaScript code for AJAX requests.)
+
+Usage:
+1. Ensure the 'layout.html' template is correctly defined and includes necessary CSS and JavaScript imports.
+2. Configure Django URL patterns to direct requests to the 'edit-post' view for handling post edits.
+3. Customize the HTML structure and CSS styles as needed to match your application's design.
+4. Ensure CSRF token protection by including the '{{ csrf_token }}' template tag within the JavaScript code for AJAX requests.
+5. Update the JavaScript code to handle the response from the server appropriately, such as updating the post content on the page 
+   after successful editing.
+
+-->
+
+{% extends "network/layout.html" %}
+{% block content %}
+    <div class="container">
+        <h2>All Posts</h2>
+        {% for post in posts %}
+            <div class="post">
+                <p>{{ post.content }}</p>
+                {% if post.author == user %}
+                    <button class="edit-btn" data-post-id="{{ post.id }}">Edit</button>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+    <script>
+        document.querySelectorAll('.edit-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var postId = this.getAttribute('data-post-id');
+                var postContent = this.parentElement.querySelector('p').innerText;
+
+                var textarea = document.createElement('textarea');
+                textarea.value = postContent;
+
+                var saveBtn = document.createElement('button');
+                saveBtn.textContent = 'Save';
+                saveBtn.addEventListener('click', function() {
+                    var newContent = textarea.value;
+                    fetch(`/edit-post/${postId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        body: JSON.stringify({ content: newContent })
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            document.querySelector(`[data-post-id="${postId}"]`).parentElement.querySelector('p').innerText = newContent;
+                        } else {
+                            console.error('Error:', response.statusText);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                });
+
+                this.parentElement.querySelector('p').replaceWith(textarea);
+                this.replaceWith(saveBtn);
+            });
+        });
+    </script>
+{% endblock %}

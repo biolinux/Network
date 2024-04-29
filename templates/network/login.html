@@ -1,0 +1,47 @@
+<!--
+Document Title: Social Network Login Page Template
+Author: 
+Date: 
+
+Description:
+This HTML template represents the login page of a social networking application. It extends a layout template named "layout.html" 
+to maintain consistency in design and includes a form for users to log in to their accounts. The template displays a welcome 
+message, a login form with fields for username and password, and a submit button. It also provides a link for users to navigate 
+to the registration page if they don't have an account yet.
+
+Dependencies:
+- 'layout.html' template (Ensure 'layout.html' is correctly defined and includes necessary CSS and JavaScript imports.)
+- Django URL configurations (Ensure the URLs 'login' and 'register' are correctly defined in your Django project.)
+
+Usage:
+1. Ensure the 'layout.html' template is correctly defined and includes necessary CSS and JavaScript imports.
+2. Configure Django URL patterns to direct requests to the 'login' and 'register' views when appropriate.
+3. Customize the HTML structure and CSS styles as needed to match your application's design.
+4. Update the form action URL to match the URL pattern for the login view in your Django project.
+5. Ensure CSRF token protection by including the {% csrf_token %} template tag within the form.
+
+-->
+
+{% extends "network/layout.html" %}
+{% block body %}
+
+    <h2>Login</h2>
+
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+
+    <form action="{% url 'login' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <input autofocus class="form-control" type="text" name="username" placeholder="Username">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="password" name="password" placeholder="Password">
+        </div>
+        <input class="btn btn-primary" type="submit" value="Login">
+    </form>
+
+    Don't have an account? <a href="{% url 'register' %}">Register here.</a>
+
+{% endblock %}

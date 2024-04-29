@@ -1,0 +1,31 @@
+{% extends "network/layout.html" %}
+{% block body %}
+    <div class="container">
+        <h2>{{ profile_user.username }}'s Profile</h2>
+        <p>Followers: {{ follower_count }}</p>
+        <p>Following: {{ following_count }}</p>
+         {% if is_following is not None %}
+            <form action="{% url 'toggle_follow' profile_user.username %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">
+                    {% if is_following %}
+                        Unfollow
+                    {% else %}
+                        Follow
+                    {% endif %}
+                </button>
+            </form>
+        {% endif %}
+        <h3>Posts:</h3>
+        <div class="posts">
+            {% for post in page_obj %}
+                <div class="post">
+                    <p><strong>{{ post.author.username }}</strong></p>
+                    <p>{{ post.content }}</p>
+                    <p>Posted on: {{ post.timestamp }}</p>
+                </div>
+                <hr>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
